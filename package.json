@@ -1,6 +1,6 @@
 {
   "name": "xiaolan",
-  "version": "1.0.33",
+  "version": "1.0.36",
   "description": "xiaolan web framework",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,7 @@
   "dependencies": {
     "crypto": "0.0.3",
     "easymysql": "^0.2.7",
+    "redis": "^2.2.5",
     "serve-static": "^1.9.3",
     "swig": "^1.4.2"
   }
