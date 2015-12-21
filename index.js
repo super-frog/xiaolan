@@ -37,7 +37,7 @@ Xiaolan.createServer = function () {
     var Request = require('./lib/request');
     var Response = require('./lib/response');
 
-    var serveStatic = require('./node_modules/serve-static');
+    var serveStatic = require('serve-static');
     var serve = serveStatic(process.cwd()+'/views/');
     var config = global.app.config;
     var _port = config.port?config.port:3000;
