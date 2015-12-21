@@ -19,3 +19,7 @@
 9.配置一键CORS
 
 10.支持解释json的content-type
+
+11.加入了rollback函数处理失败
+
+12.针对新版npm，改进了require的写法
