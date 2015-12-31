@@ -55,19 +55,14 @@ Xiaolan.createServer = function () {
                 }
             });
         }else {
-            if(req.method=='GET'){
+            req.body = '';
+            req.on('data', function (chunk) {
+                req.body += chunk;
+            });
+            req.on('end', function () {
                 Request(req);
                 Xiaolan.handler(req,res);
-            }else{
-                req.body = '';
-                req.on('data', function (chunk) {
-                    req.body += chunk;
-                });
-                req.on('end', function () {
-                    Request(req);
-                    Xiaolan.handler(req,res);
-                });
-            }
+            });
         }
     }).listen(_port,_ip);
     console.log('listen on port:' + _port+',ip:'+_ip);
