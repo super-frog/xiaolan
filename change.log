@@ -23,3 +23,5 @@
 11.加入了rollback函数处理失败
 
 12.针对新版npm，改进了require的写法
+
+13.修复urldecode的一个bug
