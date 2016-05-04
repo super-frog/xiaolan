@@ -11,10 +11,6 @@ Xiaolan.basePath = process.cwd();
 
 Xiaolan.config = null;
 
-Xiaolan.sayHello = function () {
-    console.log('hello');
-};
-
 Xiaolan.init = function (config) {
     //应用全局化
     global.app = Xiaolan;
@@ -33,15 +29,23 @@ Xiaolan.init = function (config) {
     return Xiaolan;
 };
 
+Xiaolan.route = null;
+
+Xiaolan.register = function (map) {
+    var Route = require('./lib/route');
+    Route.register(map);
+    Xiaolan.route = Route.routingTable;
+};
+
 Xiaolan.createServer = function () {
     var Request = require('./lib/request');
     var Response = require('./lib/response');
-
     var serveStatic = require('serve-static');
     var serve = serveStatic(process.cwd()+'/views/');
     var config = global.app.config;
     var _port = config.port?config.port:3000;
     var _ip = config.ip?config.ip:null;
+
     http.createServer(function (req, res) {
         console.log(req.url);
         if(global.app.libs['session']){
@@ -72,13 +76,34 @@ Xiaolan.createServer = function () {
 
 
 Xiaolan.handler = function (req, res) {
-    try {
-        require(Xiaolan.basePath + '/controllers/' + req.params[0])[req.params[1]](req, res);
-    } catch (ex) {
-        console.log(ex);
-        res.end('404 not found');
+    if(Xiaolan.route){
+        let method = req.method.toLocaleLowerCase();
+        let uri = req.url;
+        var matched = false;
+        if(Xiaolan.route[method]){
+            for(var k in Xiaolan.route[method]){
+                if(Xiaolan.route[method][k].reg.test(uri)){
+                    matched = true;
+                    break;
+                }
+            }
+            if(matched) {
+                Xiaolan.route[method][k].reactor(req, res);
+            }else{
+                res.end('404 not found');
+            }
+        }else{
+            res.end('404 not found');
+        }
+    }else {
+        try {
+            require(Xiaolan.basePath + '/controllers/' + req.params[0])[req.params[1]](req, res);
+        } catch (ex) {
+            console.log(ex);
+            res.end('404 not found');
+        }
     }
-}
+};
 
 
 module.exports = Xiaolan.init;
