@@ -38,6 +38,7 @@ Xiaolan.register = function (map) {
 };
 
 Xiaolan.createServer = function () {
+    Xiaolan.register(require(process.cwd()+'/routes'));
     var Request = require('./lib/request');
     var Response = require('./lib/response');
     var serveStatic = require('serve-static');

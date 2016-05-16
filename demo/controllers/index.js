@@ -10,8 +10,7 @@ Controller.index = function (req,res) {
     res.end('hello');
 };
 
-Controller.detail = function(req,res){
-    res.end('detail');
-}
-
+Controller.test = function(req,res){
+    res.end('test');
+};
 module.exports = Controller;
