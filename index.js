@@ -79,7 +79,7 @@ Xiaolan.createServer = function () {
 Xiaolan.handler = function (req, res) {
     if(Xiaolan.route){
         let method = req.method.toLocaleLowerCase();
-        let uri = req.url;
+        let uri = req.pathInfo;
         var matched = false;
         if(Xiaolan.route[method]){
             for(var k in Xiaolan.route[method]){

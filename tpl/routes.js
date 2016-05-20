@@ -1,6 +1,6 @@
 'use strict';
 
 module.exports = {
-    '/':'index.index',
-    '/test':'index.test'
+    '/':'get.index.index',
+    '/test':'get.index.test'
 };
