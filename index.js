@@ -1,6 +1,7 @@
 /**
  * Created by lanhao on 15/5/17.
  */
+"use strict";
 
 
 var http = require('http');
@@ -77,7 +78,7 @@ Xiaolan.createServer = function () {
 
 
 Xiaolan.handler = function (req, res) {
-    if(Xiaolan.route){
+    if(Object.keys(Xiaolan.route).length>0){
         let method = req.method.toLocaleLowerCase();
         let uri = req.pathInfo;
         var matched = false;
