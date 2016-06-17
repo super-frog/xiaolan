@@ -1,13 +1,13 @@
 {
   "name": "xiaolan",
-  "version": "1.2.9b",
+  "version": "1.2.10",
   "description": "xiaolan web framework",
   "main": "index.js",
   "scripts": {
     "start": "./node_modules/.bin/xiaolan_init"
   },
   "bin": {
-    "xiaolan_init": "./bin/xiaolan_init.js"
+    "xiaolan": "./bin/xiaolan.js"
   },
   "author": "lanhao",
   "readmeFilename": "README.md",
@@ -17,6 +17,7 @@
     "easymysql": "^0.2.7",
     "redis": "^2.2.5",
     "serve-static": "^1.9.3",
-    "swig": "^1.4.2"
+    "swig": "^1.4.2",
+    "yargs": "^4.7.1"
   }
 }

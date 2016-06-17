@@ -10,7 +10,8 @@ Controller.index = function (req,res) {
     res.end('hello');
 };
 
-Controller.test = function(req,res){
-    res.raw(418,{'content-type':'application/json'},['test']);
-};
+Controller.detail = function(req,res){
+    res.end('detail');
+}
+
 module.exports = Controller;

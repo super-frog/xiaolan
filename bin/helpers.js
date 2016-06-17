@@ -1,20 +1,26 @@
-#!/usr/bin/env node
-var fs = require('fs');
-var stat = fs.stat;
+/**
+ * Created by lanhao on 16/6/15.
+ */
 
-function copy( src, dst ){
+'use strict';
+const fs = require('fs');
+const stat = fs.stat;
+
+let helpers = {};
+
+helpers.copyR = ( src, dst ) => {
     // 读取目录中的所有文件/目录
-    fs.readdir( src, function( err, paths ){
+    fs.readdir( src, ( err, paths ) => {
         if( err ){
             throw err;
         }
 
-        paths.forEach(function( path ){
+        paths.forEach(( path ) => {
             var _src = src + '/' + path,
                 _dst = dst + '/' + path,
                 readable, writable;
 
-            stat( _src, function( err, st ){
+            stat( _src, ( err, st )=>{
                 if( err ){
                     throw err;
                 }
@@ -30,14 +36,14 @@ function copy( src, dst ){
                 }
                 // 如果是目录则递归调用自身
                 else if( st.isDirectory() ){
-                    exists( _src, _dst, copy );
+                    helpers.exists( _src, _dst, helpers.copyR );
                 }
             });
         });
     });
 };
 
-function exists( src, dst, callback ){
+helpers.exists = ( src, dst, callback ) => {
     fs.exists( dst, function( exists ){
         // 已存在
         if( exists ){
@@ -45,25 +51,11 @@ function exists( src, dst, callback ){
         }
         // 不存在
         else{
-            fs.mkdir( dst, function(){
+            fs.mkdir( dst, () => {
                 callback( src, dst );
             });
         }
     });
 };
 
-
-fs.exists( './install.locked', function( e ){
-    // 已存在
-    if( e ){
-        console.log('had been installed');
-    }
-    // 不存在
-    else{
-        exists('./node_modules/xiaolan/tpl','./',copy);
-        fs.writeFileSync('./install.locked', 'install');
-        console.log('R U OK ?');
-    }
-});
-
-
+module.exports = helpers;
