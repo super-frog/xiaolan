@@ -1,32 +1,30 @@
 /**
  * Created by lanhao on 22/6/17.
  */
+"use strict";
 
 const config = require('dotenvr').load();
-console.log(config);
+
 module.exports = {
-  'version': '1.0.0',
-  'port': 3001,
-  'ip': null,
-  'cors': false,
-  'static': ['js', 'css', 'jpg', 'png', 'ico'],
+  'version': config['VERSION'],
+  'port': config['PORT'],
+  'ip': config['IP'],
+  'cors': config['CORS'],
+  'static': config['STATIC_FILE'].split(','),
   'modules': {
     'mysql': {
-      'import': 0,
+      'import': config['MYSQL'] === 'on'?1:0,
       'config': {
-        "host": "127.0.0.1",
-        "port": "3306",
-        "user": "root",
-        "password": "",
-        "database": "vdb_1"
+        "host": config['MYSQL_HOST'],
+        "port": config['MYSQL_PORT'],
+        "user": config['MYSQL_USER'],
+        "password": config['MYSQL_PASSWORD'],
+        "database": config['MYSQL_DATABASE']
       }
     },
     'session': {
       'import': 1,
       'config': {
-        'store':'file',//memory [file]
-        'path':'/Users/lanhao/tmp/sessions',
-        'age': 60
       }
     }
     ,
@@ -35,10 +33,10 @@ module.exports = {
       'config': {}
     },
     'redis':{
-      'import':0,
+      'import':config['REDIS'] === 'on'?1:0,
       'config':{
-        'port':6379,
-        'host':'127.0.0.1'
+        'port':config['REDIS_PORT'],
+        'host':config['REDIS_HOST']
       }
     }
   }
