@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "crypto": "0.0.3",
+    "dotenvr": "^0.1.1",
     "easymysql": "^0.2.7",
     "redis": "^2.2.5",
     "serve-static": "^1.9.3",

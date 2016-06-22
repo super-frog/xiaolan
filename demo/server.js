@@ -6,7 +6,7 @@
 var config = require('./config/config');
 
 //引入小蓝框架
-var xiaolan = require('xiaolan')(config);
+var xiaolan = require('../index.js')(config);
 
 //启动监听服务
 xiaolan.createServer();

@@ -1,6 +1,9 @@
 /**
- * Created by lanhao on 15/5/17.
+ * Created by lanhao on 22/6/17.
  */
+
+const config = require('dotenvr').load();
+console.log(config);
 module.exports = {
   'version': '1.0.0',
   'port': 3001,
@@ -21,6 +24,8 @@ module.exports = {
     'session': {
       'import': 1,
       'config': {
+        'store':'file',//memory [file]
+        'path':'/Users/lanhao/tmp/sessions',
         'age': 60
       }
     }
@@ -30,7 +35,7 @@ module.exports = {
       'config': {}
     },
     'redis':{
-      'import':1,
+      'import':0,
       'config':{
         'port':6379,
         'host':'127.0.0.1'
