@@ -2,5 +2,5 @@
 
 module.exports = {
     '/':'get.index.index',
-    '/test':'get.index.test'
+    //'/test':'get.index.test'
 };
