@@ -10,6 +10,7 @@ module.exports = {
   'port': config['PORT'],
   'ip': config['IP'],
   'cors': config['CORS'],
+  'xl_tk':config['XL_TK'],
   'static': config['STATIC_FILE'].split(','),
   'modules': {
     'mysql': {
@@ -22,12 +23,6 @@ module.exports = {
         "database": config['MYSQL_DATABASE']
       }
     },
-    'session': {
-      'import': 1,
-      'config': {
-      }
-    }
-    ,
     'tools': {
       'import': 1,
       'config': {}
