@@ -10,11 +10,11 @@ module.exports = {
   'port': config['PORT'],
   'ip': config['IP'],
   'cors': config['CORS'],
-  'xl_tk':config['XL_TK'],
+  'xl_tk': config['XL_TK'],
   'static': config['STATIC_FILE'].split(','),
   'modules': {
     'mysql': {
-      'import': config['MYSQL'] === 'on'?1:0,
+      'import': config['MYSQL'] === 'on' ? 1 : 0,
       'config': {
         "host": config['MYSQL_HOST'],
         "port": config['MYSQL_PORT'],
@@ -27,11 +27,14 @@ module.exports = {
       'import': 1,
       'config': {}
     },
-    'redis':{
-      'import':config['REDIS'] === 'on'?1:0,
-      'config':{
-        'port':config['REDIS_PORT'],
-        'host':config['REDIS_HOST']
+    'session': {
+      'import': config['SESSION'] === 'on' ? 1 : 0,
+    },
+    'redis': {
+      'import': config['REDIS'] === 'on' ? 1 : 0,
+      'config': {
+        'port': config['REDIS_PORT'],
+        'host': config['REDIS_HOST']
       }
     }
   }
