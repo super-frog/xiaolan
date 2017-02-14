@@ -5,6 +5,7 @@
 
 
 var http = require('http');
+const EOL = require('os').EOL;
 
 var Xiaolan = {};
 
@@ -49,7 +50,13 @@ Xiaolan.createServer = function () {
   var _ip = config.ip ? config.ip : null;
 
   http.createServer(function (req, res) {
+
+    console.log((new Date()).toLocaleString());
     console.log(req.url);
+    console.log('====================');
+    console.log(req.body);
+    console.log('===================='+EOL);
+
     global.app.libs['session'].start(req, res);
     Response(res);
     if (config.static.toString().indexOf((req.url.split('?').shift()).split('.').pop()) != -1) {
