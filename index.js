@@ -54,7 +54,7 @@ Xiaolan.createServer = function () {
     console.log((new Date()).toLocaleString());
     console.log(req.url);
     console.log('====================');
-    console.log(req.body);
+    console.log(req.body || {});
     console.log('===================='+EOL);
 
     global.app.libs['session'].start(req, res);
