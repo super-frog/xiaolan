@@ -1,11 +1,9 @@
 {
   "name": "xiaolan",
-  "version": "1.3.25",
+  "version": "1.3.27",
   "description": "xiaolan web framework",
   "main": "index.js",
-  "scripts": {
-    "postinstall":"cd ../.. && ./node_modules/.bin/xiaolan"
-  },
+  "scripts": {},
   "bin": {
     "xiaolan": "./bin/xiaolan.js"
   },
