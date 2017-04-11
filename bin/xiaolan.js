@@ -14,6 +14,7 @@ var exists = helpers.exists;
 console.log('==============='+process.cwd()+'===============');
 
 var projectRoot = process.cwd()+'/';
+
 fs.exists(projectRoot+'./install.locked', (e) => {
   // 已存在
   if (e) {

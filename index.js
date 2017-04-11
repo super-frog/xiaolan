@@ -50,14 +50,15 @@ Xiaolan.createServer = function () {
   var _ip = config.ip ? config.ip : null;
 
   http.createServer(function (req, res) {
-
-    console.log((new Date()).toLocaleString());
+    let _date = req.start = res.start = new Date();
+    console.log(_date.toLocaleString());
     console.log(req.url);
     console.log('====================');
     console.log(req.body || {});
     console.log('===================='+EOL);
 
     global.app.libs['session'].start(req, res);
+
     Response(res);
     if (config.static.toString().indexOf((req.url.split('?').shift()).split('.').pop()) != -1) {
       serve(req, res, function (err) {
@@ -75,10 +76,12 @@ Xiaolan.createServer = function () {
         Xiaolan.handler(req, res);
       });
     }
+
   }).listen(_port, _ip);
   console.log('listen on port:' + _port + ',ip:' + _ip);
   console.log('.');
   console.log('.   <------ nobody care about this point!!');
+
 };
 
 
