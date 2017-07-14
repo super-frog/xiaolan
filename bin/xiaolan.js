@@ -7,13 +7,13 @@ const EOL = (os && os.EOL) ? os.EOL : '\n';
 const fs = require('fs');
 const helpers = require('./helpers');
 
-var copy = helpers.copyR;
+const copy = helpers.copyR;
 
-var exists = helpers.exists;
+const exists = helpers.exists;
 
 console.log('==============='+process.cwd()+'===============');
 
-var projectRoot = process.cwd()+'/';
+const projectRoot = process.cwd()+'/';
 
 fs.exists(projectRoot+'./install.locked', (e) => {
   // 已存在
