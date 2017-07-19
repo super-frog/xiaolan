@@ -96,7 +96,7 @@ Xiaolan.handler = function (req, res) {
     let uri = req.pathInfo;
     let matched = false;
     if (Xiaolan.route[method]) {
-      for (let k in Xiaolan.route[method]) {
+      for (var k in Xiaolan.route[method]) {
         if (Xiaolan.route[method][k].reg.test(uri)) {
           matched = true;
           break;
