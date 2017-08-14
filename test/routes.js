@@ -1,7 +1,22 @@
 'use strict';
 
+const Router = require('xiaolan-router');
+
+let router = new Router();
+
+router.get('', 'index.index')
+  .get('/test', 'index.kaka')
+  .delete('{id}', 'index.remove');
+
+module.exports = router.map();
+
+/*
+ * same as
+
 module.exports = {
   'get /': 'index.index',
   'get /test': 'index.kaka',
-  'delete /{id}':'index.index'
+  'delete /{id}': 'index.index'
 };
+
+ */
