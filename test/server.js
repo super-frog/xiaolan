@@ -3,10 +3,18 @@
  */
 
 //引入配置文件
-var config = require('./config/config');
+const config = require('./config/config');
 
 //引入小蓝框架
-var xiaolan = require('../index.js')(config);
+const Xiaolan = require('../app.js');
+
 
 //启动监听服务
-xiaolan.createServer();
+const app = new Xiaolan(config);
+
+app.createServer();
+
+app.event.on(require('../lib/constant').EVENTS.RES_END,function(){
+  "use strict";
+  console.log('response end!');
+})
