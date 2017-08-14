@@ -13,12 +13,13 @@ const serveStatic = require('serve-static');
 const Route = require('./lib/route');
 const Request = require('./lib/request');
 const Response = require('./lib/response');
-
+const Session = require('./lib/session');
 
 class Xiaolan {
   constructor(config) {
     this.basePath = process.cwd();
     this.config = config;
+    this.sessionStorage = new Session(config, this);
     this.route = this.register();
     this.event = new Events();
     process.app = this;
@@ -67,7 +68,7 @@ class Xiaolan {
         req.on('end', () => {
           let response = new Response(res, app);
           let request = new Request(req, app);
-
+          app.sessionStorage.start(request, response);
           app.handler(request, response);
         });
       }

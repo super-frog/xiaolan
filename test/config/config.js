@@ -8,7 +8,7 @@ const env = require('dotenvr').load();
 const config = {
   port: env['PORT'],
   cors: env['CORS'],
-  session_driver: 'default',
+  session_driver: 'memory',
   static: new Set(['js', 'css', 'jpg', 'png', 'gif', 'jpeg','ico'].concat(env['STATIC_FILE'].split(',')))
 };
 
