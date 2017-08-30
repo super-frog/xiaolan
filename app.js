@@ -14,6 +14,7 @@ const Route = require('./lib/route');
 const Request = require('./lib/request');
 const Response = require('./lib/response');
 const Session = require('./lib/session');
+const Context = require('./lib/Context');
 
 class Xiaolan {
   constructor(config) {
@@ -31,6 +32,7 @@ class Xiaolan {
       map = require(process.cwd() + '/routes');
     }
     Route.register(map);
+
     return Route.routingTable;
   }
 
@@ -94,7 +96,7 @@ class Xiaolan {
           }
         }
         if (matched) {
-          this.route[method][k].reactor(req, res);
+          this.route[method][k].reactor.reflect(req,res).execute();
         } else {
           res.notFound('404 not found');
         }
