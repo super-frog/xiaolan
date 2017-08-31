@@ -14,7 +14,3 @@ const app = new Xiaolan(config);
 
 app.createServer();
 
-app.event.on(require('../lib/constant').EVENTS.RES_END,function(){
-  "use strict";
-  console.log('response end!');
-})

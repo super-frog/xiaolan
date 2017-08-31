@@ -6,12 +6,9 @@
 
 var Controller = {};
 
-Controller.index = function (req,res) {
-    res.end('hello');
+Controller.index = (req, res) => {
+  return {};
 };
 
-Controller.detail = function(req,res){
-    res.end('detail');
-}
 
 module.exports = Controller;

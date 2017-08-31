@@ -6,9 +6,10 @@
 
 var Controller = {};
 
-Controller.index = (User) => {
+Controller.index = (req, res, User) => {
 
-
+  res.json(200, User);
+  // res.end('dddds');
 };
 
 

@@ -57,7 +57,7 @@ class Xiaolan {
         //静态文件
         serve(req, res, (err) => {
           if (err) {
-            console.log(err);
+            console.log('Static Error:'+err.toString());
           }
           res.end('404 NOT FOUND');
         });
@@ -96,7 +96,8 @@ class Xiaolan {
           }
         }
         if (matched) {
-          this.route[method][k].reactor.reflect(req,res).execute();
+          this.route[method][k].reactor().reflect(req,res).execute();
+          return;
         } else {
           res.notFound('404 not found');
         }
