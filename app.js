@@ -3,9 +3,7 @@
  */
 "use strict";
 
-
 const http = require('http');
-const EOL = require('os').EOL;
 const fs = require('fs');
 const Events = require('events');
 const serveStatic = require('serve-static');
@@ -14,7 +12,25 @@ const Route = require('./lib/route');
 const Request = require('./lib/request');
 const Response = require('./lib/response');
 const Session = require('./lib/session');
-const Context = require('./lib/Context');
+const E = require('./lib/error');
+
+if(fs.existsSync(process.cwd()+'/errors/Error.gen.js')){
+  let errDefine = require(process.cwd()+'/errors/Error.gen.js');
+  for(let k in errDefine){
+    E.RegisterError(errDefine[k]);
+  }
+  global.error = E.ErrorShop;
+}else{
+  global.error = {
+    UNKNOWN_ERROR:new E.XiaolanError({
+      code:-1,
+      httpStatus:500,
+      message:'unknown',
+      name:'UNKNOWN_ERROR',
+    })
+  }
+};
+
 
 class Xiaolan {
   constructor(config) {
@@ -31,8 +47,8 @@ class Xiaolan {
     if (fs.existsSync(process.cwd() + '/routes.js')) {
       map = require(process.cwd() + '/routes');
     }
-    Route.register(map);
 
+    Route.register(map);
     return Route.routingTable;
   }
 
@@ -96,7 +112,19 @@ class Xiaolan {
           }
         }
         if (matched) {
-          this.route[method][k].reactor().reflect(req,res).execute();
+          for(let i in this.route[method][k].middleware){
+            let r = this.route[method][k].middleware[i].reflect(req,res).execute();
+            if(r instanceof E.XiaolanError){
+              res.json(r.httpStatus, r.obj());
+              return ;
+            }
+          }
+          let r = this.route[method][k].reactor.reflect(req,res).execute();
+          if(r instanceof E.XiaolanError){
+            res.json(r.httpStatus, r.obj());
+          }else{
+            res.json(200,r);
+          }
           return;
         } else {
           res.notFound('404 not found');
@@ -115,5 +143,7 @@ class Xiaolan {
     }
   }
 }
+
+
 
 module.exports = Xiaolan;

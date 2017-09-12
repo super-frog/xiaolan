@@ -1,16 +1,8 @@
 /**
  * Created by lanhao on 15/5/17.
  */
+"use strict";
 
-
-
-var Controller = {};
-
-Controller.index = (req, res, User) => {
-
-  res.json(200, User);
-  // res.end('dddds');
+module.exports = (User) => {
+  return User;
 };
-
-
-module.exports = Controller;
