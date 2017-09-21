@@ -31,6 +31,12 @@ if(fs.existsSync(process.cwd()+'/errors/Error.gen.js')){
   }
 };
 
+global.error.BAD_REQUEST = new E.XiaolanError({
+  name: 'BAD_REQUEST',
+  httpStatus: 400,
+  code: -2,
+  message: '入参检测错误',
+});
 
 class Xiaolan {
   constructor(config) {

@@ -6,7 +6,7 @@
 const config = require('./config/config');
 
 //引入小蓝框架
-const Xiaolan = require('../app.js');
+const Xiaolan = require('../app');
 
 
 //启动监听服务

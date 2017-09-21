@@ -1,6 +1,6 @@
 {
   "name": "xiaolan",
-  "version": "1.4.3",
+  "version": "1.4.6",
   "description": "xiaolan web framework",
   "main": "app.js",
   "scripts": {},
@@ -18,6 +18,7 @@
     "fy-mysql": "^0.2.13",
     "redis": "^2.2.5",
     "serve-static": "^1.9.3",
+    "xiaolan-db": "^1.2.0",
     "xiaolan-router": "^1.0.1"
   }
 }
