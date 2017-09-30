@@ -1,6 +1,6 @@
 {
   "name": "xiaolan",
-  "version": "1.4.6",
+  "version": "1.4.18",
   "description": "xiaolan web framework",
   "main": "app.js",
   "scripts": {},
@@ -11,6 +11,7 @@
   "readmeFilename": "README.md",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.5.0",
     "colors": "^1.1.2",
     "crypto": "0.0.3",
     "dotenvr": "^0.1.7",
@@ -20,5 +21,12 @@
     "serve-static": "^1.9.3",
     "xiaolan-db": "^1.2.0",
     "xiaolan-router": "^1.0.1"
-  }
+  },
+  "contributors": [
+    {
+      "name": "jiangyuzhen",
+      "email": "",
+      "url": "https://github.com/jiangyuzhen"
+    }
+  ]
 }

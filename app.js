@@ -7,6 +7,7 @@ const http = require('http');
 const fs = require('fs');
 const Events = require('events');
 const serveStatic = require('serve-static');
+const async = require('async');
 
 const Route = require('./lib/route');
 const Request = require('./lib/request');
@@ -14,22 +15,23 @@ const Response = require('./lib/response');
 const Session = require('./lib/session');
 const E = require('./lib/error');
 
-if(fs.existsSync(process.cwd()+'/errors/Error.gen.js')){
-  let errDefine = require(process.cwd()+'/errors/Error.gen.js');
-  for(let k in errDefine){
+if (fs.existsSync(process.cwd() + '/errors/Error.gen.js')) {
+  let errDefine = require(process.cwd() + '/errors/Error.gen.js');
+  for (let k in errDefine) {
     E.RegisterError(errDefine[k]);
   }
   global.error = E.ErrorShop;
-}else{
+} else {
   global.error = {
-    UNKNOWN_ERROR:new E.XiaolanError({
-      code:-1,
-      httpStatus:500,
-      message:'unknown',
-      name:'UNKNOWN_ERROR',
+    UNKNOWN_ERROR: new E.XiaolanError({
+      code: -1,
+      httpStatus: 500,
+      message: 'unknown',
+      name: 'UNKNOWN_ERROR',
     })
   }
-};
+}
+;
 
 global.error.BAD_REQUEST = new E.XiaolanError({
   name: 'BAD_REQUEST',
@@ -79,7 +81,7 @@ class Xiaolan {
         //静态文件
         serve(req, res, (err) => {
           if (err) {
-            console.log('Static Error:'+err.toString());
+            console.log('Static Error:' + err.toString());
           }
           res.end('404 NOT FOUND');
         });
@@ -91,6 +93,7 @@ class Xiaolan {
         });
         req.on('end', () => {
           let response = new Response(res, app);
+          response.requestTime = _date.getTime();
           let request = new Request(req, app);
           app.sessionStorage.start(request, response);
           app.handler(request, response);
@@ -118,20 +121,65 @@ class Xiaolan {
           }
         }
         if (matched) {
-          for(let i in this.route[method][k].middleware){
-            let r = this.route[method][k].middleware[i].reflect(req,res).execute();
-            if(r instanceof E.XiaolanError){
-              res.json(r.httpStatus, r.obj());
-              return ;
+          req.pickParams(this.route[method][k].patten);
+
+          let reactor = this.route[method][k].reactor;
+          let funcSeries = []; 
+          funcSeries = funcSeries.concat(this.route[method][k].middleware);
+
+          let rSet = [];
+          let eSet = []
+          async.eachSeries(funcSeries, (item, callback) => {
+            item.reflect(req, res).execute()
+              .then((r) => {
+                rSet.push(r);
+                callback(null, r);
+              })
+              .catch((e) => {
+                eSet.push(e);
+                callback(e, null);
+              });
+          }, function(err, ret){
+            if(err){
+              res.json(error.UNKNOWN_ERROR.httpStatus, error.UNKNOWN_ERROR.obj());
+            }else{
+              if(eSet.length){
+                res.json(error.UNKNOWN_ERROR.httpStatus, error.UNKNOWN_ERROR.obj());
+              }else {
+                if(rSet.length) {
+                  for (let k in rSet) {
+                    if (rSet[k] instanceof E.XiaolanError) {
+                      res.json(rSet[k].httpStatus, rSet[k].obj());
+                    } else {
+                      reactor.reflect(req, res).execute()
+                        .then((v) => {
+                          if (v instanceof E.XiaolanError) {
+                            res.json(v.httpStatus, v.obj());
+                          } else {
+                            res.json(200, v);
+                          }
+                        })
+                        .catch((e) => {
+                          res.json(error.UNKNOWN_ERROR.httpStatus, error.UNKNOWN_ERROR.obj());
+                        });
+                    }
+                  }
+                }else{
+                  reactor.reflect(req, res).execute()
+                    .then((v) => {
+                      if (v instanceof E.XiaolanError) {
+                        res.json(v.httpStatus, v.obj());
+                      } else {
+                        res.json(200, v);
+                      }
+                    })
+                    .catch((e) => {
+                      res.json(error.UNKNOWN_ERROR.httpStatus, error.UNKNOWN_ERROR.obj());
+                    });
+                }
+              }
             }
-          }
-          let r = this.route[method][k].reactor.reflect(req,res).execute();
-          if(r instanceof E.XiaolanError){
-            res.json(r.httpStatus, r.obj());
-          }else{
-            res.json(200,r);
-          }
-          return;
+          });
         } else {
           res.notFound('404 not found');
         }
@@ -149,7 +197,6 @@ class Xiaolan {
     }
   }
 }
-
 
 
 module.exports = Xiaolan;
