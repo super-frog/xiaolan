@@ -15,8 +15,8 @@ const Response = require('./lib/response');
 const Session = require('./lib/session');
 const E = require('./lib/error');
 
-if (fs.existsSync(process.cwd() + '/errors/Error.gen.js')) {
-  let errDefine = require(process.cwd() + '/errors/Error.gen.js');
+if (fs.existsSync(process.cwd() + '/definitions/errors/Error.gen.js')) {
+  let errDefine = require(process.cwd() + '/definitions/errors/Error.gen.js');
   for (let k in errDefine) {
     E.RegisterError(errDefine[k]);
   }
@@ -36,8 +36,7 @@ if (fs.existsSync(process.cwd() + '/errors/Error.gen.js')) {
       name: 'INTERNAL_ERROR',
     })
   }
-}
-;
+};
 
 global.aha = (t) => {
   let date = new Date();
@@ -80,7 +79,7 @@ class Xiaolan {
 
   createServer() {
     let app = this;
-    let serve = serveStatic(process.cwd() + '/views/');
+
     http.createServer((req, res) => {
       let _date = new Date();
 
@@ -94,29 +93,18 @@ class Xiaolan {
         res.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
       }
 
+      req.body = '';
+      req.on('data', (chunk) => {
+        req.body += chunk;
+      });
+      req.on('end', () => {
+        let response = new Response(res, app);
+        response.requestTime = _date.getTime();
+        let request = new Request(req, app);
+        app.sessionStorage.start(request, response);
+        app.handler(request, response);
+      });
 
-      if (this.config.static.has((req.url.split('?').shift()).split('.').pop())) {
-        //静态文件
-        serve(req, res, (err) => {
-          if (err) {
-            console.log('Static Error:' + err.toString());
-          }
-          res.end('404 NOT FOUND');
-        });
-      } else {
-
-        req.body = '';
-        req.on('data', (chunk) => {
-          req.body += chunk;
-        });
-        req.on('end', () => {
-          let response = new Response(res, app);
-          response.requestTime = _date.getTime();
-          let request = new Request(req, app);
-          app.sessionStorage.start(request, response);
-          app.handler(request, response);
-        });
-      }
 
     }).listen(this.config.port || 3001);
 
@@ -158,27 +146,27 @@ class Xiaolan {
               });
           }, function (err, ret) {
             if (err) {
-              res.raw(error.INTERNAL_ERROR.httpStatus,{
+              res.raw(error.INTERNAL_ERROR.httpStatus, {
                 'content-type': 'application/json; charset=UTF-8'
               }, error.INTERNAL_ERROR.obj());
             } else {
               if (eSet.length) {
                 console.error(eSet);
-                res.raw(error.INTERNAL_ERROR.httpStatus,{
+                res.raw(error.INTERNAL_ERROR.httpStatus, {
                   'content-type': 'application/json; charset=UTF-8'
                 }, error.INTERNAL_ERROR.obj());
               } else {
                 if (rSet.length) {
                   for (let k in rSet) {
                     if (rSet[k] instanceof E.XiaolanError) {
-                      res.raw(rSet[k].httpStatus,{
+                      res.raw(rSet[k].httpStatus, {
                         'content-type': 'application/json; charset=UTF-8'
                       }, rSet[k].obj());
                     } else {
                       reactor.reflect(req, res).execute()
                         .then((v) => {
                           if (v instanceof E.XiaolanError) {
-                            res.raw(v.httpStatus,{
+                            res.raw(v.httpStatus, {
                               'content-type': 'application/json; charset=UTF-8'
                             }, v.obj());
                           } else {
@@ -187,7 +175,7 @@ class Xiaolan {
                         })
                         .catch((e) => {
                           console.error(e);
-                          res.raw(error.INTERNAL_ERROR.httpStatus,{
+                          res.raw(error.INTERNAL_ERROR.httpStatus, {
                             'content-type': 'application/json; charset=UTF-8'
                           }, error.INTERNAL_ERROR.obj());
                         });
@@ -197,7 +185,7 @@ class Xiaolan {
                   reactor.reflect(req, res).execute()
                     .then((v) => {
                       if (v instanceof E.XiaolanError) {
-                        res.raw(v.httpStatus,{
+                        res.raw(v.httpStatus, {
                           'content-type': 'application/json; charset=UTF-8'
                         }, v.obj());
                       } else {
@@ -206,8 +194,8 @@ class Xiaolan {
                     })
                     .catch((e) => {
                       console.error(e);
-                      let message = e.name === 'MysqlError'? e.sqlMessage : '';
-                      res.raw(error.INTERNAL_ERROR.httpStatus,{
+                      let message = e.name === 'MysqlError' ? e.sqlMessage : '';
+                      res.raw(error.INTERNAL_ERROR.httpStatus, {
                         'content-type': 'application/json; charset=UTF-8'
                       }, Object.assign(error.INTERNAL_ERROR.obj(), {message}));
                     });
@@ -216,12 +204,12 @@ class Xiaolan {
             }
           });
         } else {
-          res.raw(error.NOT_FOUND.httpStatus,{
+          res.raw(error.NOT_FOUND.httpStatus, {
             'content-type': 'application/json; charset=UTF-8'
           }, error.NOT_FOUND.obj());
         }
       } else {
-        res.raw(error.NOT_FOUND.httpStatus,{
+        res.raw(error.NOT_FOUND.httpStatus, {
           'content-type': 'application/json; charset=UTF-8'
         }, error.NOT_FOUND.obj());
       }
@@ -231,7 +219,7 @@ class Xiaolan {
         require(this.basePath + '/controllers/' + req.params[0])[req.params[1]](req, res);
       } catch (ex) {
         console.log(ex);
-        res.raw(error.NOT_FOUND.httpStatus,{
+        res.raw(error.NOT_FOUND.httpStatus, {
           'content-type': 'application/json; charset=UTF-8'
         }, error.NOT_FOUND.obj());
       }

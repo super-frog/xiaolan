@@ -9,7 +9,6 @@ const config = {
   port: env['PORT'],
   cors: env['CORS'],
   session_driver: 'memory',
-  static: new Set(['js', 'css', 'jpg', 'png', 'gif', 'jpeg','ico'].concat(env['STATIC_FILE'].split(',')))
 };
 
 if (env['REDIS_HOST'] && env['REDIS_PORT']) {
