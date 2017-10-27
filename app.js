@@ -5,10 +5,8 @@
 
 const http = require('http');
 const fs = require('fs');
-const Events = require('events');
-const serveStatic = require('serve-static');
 const async = require('async');
-
+const EOL = require('os').EOL;
 const Route = require('./lib/route');
 const Request = require('./lib/request');
 const Response = require('./lib/response');
@@ -36,7 +34,8 @@ if (fs.existsSync(process.cwd() + '/definitions/errors/Error.gen.js')) {
       name: 'INTERNAL_ERROR',
     })
   }
-};
+}
+;
 
 global.aha = (t) => {
   let date = new Date();
@@ -63,7 +62,6 @@ class Xiaolan {
     this.config = config;
     this.sessionStorage = new Session(config, this);
     this.route = this.register();
-    this.event = new Events();
     process.app = this;
   }
 
@@ -81,11 +79,9 @@ class Xiaolan {
     let app = this;
 
     http.createServer((req, res) => {
-      let _date = new Date();
-
-      console.log(' ');
-      console.log(_date.toLocaleString());
-      console.log(req.method, req.url);
+      //todo console make code slow
+      //let _date = new Date();
+      //console.log(`${EOL}${_date.toLocaleString()}${EOL}${req.method}  ${req.url}`);
 
       if (this.config.cors === true) {
         res.setHeader("Access-Control-Allow-Origin", "*");
@@ -98,9 +94,10 @@ class Xiaolan {
         req.body += chunk;
       });
       req.on('end', () => {
-        let response = new Response(res, app);
-        response.requestTime = _date.getTime();
-        let request = new Request(req, app);
+
+        let response = new Response(res);
+
+        let request = new Request(req);
         app.sessionStorage.start(request, response);
         app.handler(request, response);
       });
@@ -133,7 +130,8 @@ class Xiaolan {
           funcSeries = funcSeries.concat(this.route[method][k].middleware);
 
           let rSet = [];
-          let eSet = []
+          let eSet = [];
+
           async.eachSeries(funcSeries, (item, callback) => {
             item.reflect(req, res).execute()
               .then((r) => {
@@ -151,7 +149,6 @@ class Xiaolan {
               }, error.INTERNAL_ERROR.obj());
             } else {
               if (eSet.length) {
-                console.error(eSet);
                 res.raw(error.INTERNAL_ERROR.httpStatus, {
                   'content-type': 'application/json; charset=UTF-8'
                 }, error.INTERNAL_ERROR.obj());
@@ -174,7 +171,6 @@ class Xiaolan {
                           }
                         })
                         .catch((e) => {
-                          console.error(e);
                           res.raw(error.INTERNAL_ERROR.httpStatus, {
                             'content-type': 'application/json; charset=UTF-8'
                           }, error.INTERNAL_ERROR.obj());
@@ -193,8 +189,7 @@ class Xiaolan {
                       }
                     })
                     .catch((e) => {
-                      console.error(e);
-                      let message = e.name === 'MysqlError' ? e.sqlMessage : '';
+                      let message = (e && e.name === 'MysqlError') ? e.sqlMessage : '';
                       res.raw(error.INTERNAL_ERROR.httpStatus, {
                         'content-type': 'application/json; charset=UTF-8'
                       }, Object.assign(error.INTERNAL_ERROR.obj(), {message}));
