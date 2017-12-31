@@ -4,6 +4,7 @@
 "use strict";
 
 const http = require('http');
+const path = require('path');
 const fs = require('fs');
 const async = require('async');
 const EOL = require('os').EOL;
@@ -113,11 +114,20 @@ class Xiaolan {
   handler(req, res) {
     if (Object.keys(this.route).length > 0) {
       let method = req.method.toLocaleLowerCase();
-      let uri = req.pathInfo;
+      if(method === 'get' && req.pathInfo==='/_jsoc'){
+        let jsocPath = path.resolve('./jsoc.json');
+        if(fs.existsSync(jsocPath)) {
+          res.json(200, require(jsocPath));
+        }else{
+          res.json(404, {},'jsoc file not found');
+        }
+        return;
+      }
+      let pathInfo = req.pathInfo;
       let matched = false;
       if (this.route[method]) {
         for (var k in this.route[method]) {
-          if (this.route[method][k].reg.test(uri)) {
+          if (this.route[method][k].reg.test(pathInfo)) {
             matched = true;
             break;
           }
