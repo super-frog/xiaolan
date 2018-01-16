@@ -6,8 +6,8 @@ const fs = require('fs');
 const env = require('dotenvr').load();
 
 const config = {
-  port: env['PORT'],
-  cors: env['CORS'],
+  port: env['PORT'] || process.env['PORT'],
+  cors: env['CORS'] || process.env['CORS'],
   session_driver: 'memory',
 };
 

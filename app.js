@@ -114,12 +114,12 @@ class Xiaolan {
   handler(req, res) {
     if (Object.keys(this.route).length > 0) {
       let method = req.method.toLocaleLowerCase();
-      if(method === 'get' && req.pathInfo==='/_jsoc'){
+      if (method === 'get' && req.pathInfo.endsWith('_jsoc')) {
         let jsocPath = path.resolve('./jsoc.json');
-        if(fs.existsSync(jsocPath)) {
+        if (fs.existsSync(jsocPath)) {
           res.json(200, require(jsocPath));
-        }else{
-          res.json(404, {},'jsoc file not found');
+        } else {
+          res.json(404, {}, 'jsoc file not found');
         }
         return;
       }
@@ -169,24 +169,23 @@ class Xiaolan {
                       res.raw(rSet[k].httpStatus, {
                         'content-type': 'application/json; charset=UTF-8'
                       }, rSet[k].obj());
-                    } else {
-                      reactor.reflect(req, res).execute()
-                        .then((v) => {
-                          if (v instanceof E.XiaolanError) {
-                            res.raw(v.httpStatus, {
-                              'content-type': 'application/json; charset=UTF-8'
-                            }, v.obj());
-                          } else {
-                            res.json(200, v);
-                          }
-                        })
-                        .catch((e) => {
-                          res.raw(error.INTERNAL_ERROR.httpStatus, {
-                            'content-type': 'application/json; charset=UTF-8'
-                          }, error.INTERNAL_ERROR.obj());
-                        });
                     }
                   }
+                  reactor.reflect(req, res).execute()
+                    .then((v) => {
+                      if (v instanceof E.XiaolanError) {
+                        res.raw(v.httpStatus, {
+                          'content-type': 'application/json; charset=UTF-8'
+                        }, v.obj());
+                      } else {
+                        res.json(200, v);
+                      }
+                    })
+                    .catch((e) => {
+                      res.raw(error.INTERNAL_ERROR.httpStatus, {
+                        'content-type': 'application/json; charset=UTF-8'
+                      }, error.INTERNAL_ERROR.obj());
+                    });
                 } else {
                   reactor.reflect(req, res).execute()
                     .then((v) => {
@@ -202,7 +201,7 @@ class Xiaolan {
                       let message = (e && e.name === 'MysqlError') ? e.sqlMessage : '';
                       res.raw(error.INTERNAL_ERROR.httpStatus, {
                         'content-type': 'application/json; charset=UTF-8'
-                      }, Object.assign(error.INTERNAL_ERROR.obj(), {message}));
+                      }, Object.assign(error.INTERNAL_ERROR.obj(), { message }));
                     });
                 }
               }
