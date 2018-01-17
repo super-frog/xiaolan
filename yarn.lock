@@ -237,6 +237,6 @@ xiaolan-db@^1.2.9:
   dependencies:
     fy-mysql "^0.2.13"
 
-xiaolan-router@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/xiaolan-router/-/xiaolan-router-1.0.1.tgz#e81c4493aa15af0637177480cf91735df9948089"
+xiaolan-router@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/xiaolan-router/-/xiaolan-router-1.0.2.tgz#4fd882ca51148eea84d9c61f8845ac6e0241a70f"

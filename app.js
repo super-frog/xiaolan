@@ -114,15 +114,15 @@ class Xiaolan {
   handler(req, res) {
     if (Object.keys(this.route).length > 0) {
       let method = req.method.toLocaleLowerCase();
-      if (method === 'get' && req.pathInfo.endsWith('_jsoc')) {
-        let jsocPath = path.resolve('./jsoc.json');
-        if (fs.existsSync(jsocPath)) {
-          res.json(200, require(jsocPath));
-        } else {
-          res.json(404, {}, 'jsoc file not found');
-        }
-        return;
-      }
+      // if (method === 'get' && req.pathInfo.endsWith('_jsoc')) {
+      //   let jsocPath = path.resolve('./jsoc.json');
+      //   if (fs.existsSync(jsocPath)) {
+      //     res.json(200, require(jsocPath));
+      //   } else {
+      //     res.json(404, {}, 'jsoc file not found');
+      //   }
+      //   return;
+      // }
       let pathInfo = req.pathInfo;
       let matched = false;
       if (this.route[method]) {
