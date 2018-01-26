@@ -10,6 +10,7 @@ const async = require('async');
 const EOL = require('os').EOL;
 const Route = require('./lib/route');
 const Request = require('./lib/request');
+const Logger = require('./lib/Logger');
 const Response = require('./lib/response');
 const Session = require('./lib/session');
 const E = require('./lib/error');
@@ -35,12 +36,6 @@ if (fs.existsSync(process.cwd() + '/definitions/errors/Error.gen.js')) {
       name: 'INTERNAL_ERROR',
     })
   }
-}
-;
-
-global.aha = (t) => {
-  let date = new Date();
-  console.log('Time used:', date.getTime() - t);
 };
 
 global.error.BAD_REQUEST = new E.XiaolanError({
@@ -56,6 +51,8 @@ global.error.NOT_FOUND = new E.XiaolanError({
   code: -3,
   message: 'not found',
 });
+
+global.logger = new Logger(process.env['LOG_PATH'] || '/tmp');
 
 class Xiaolan {
   constructor(config) {
@@ -114,15 +111,6 @@ class Xiaolan {
   handler(req, res) {
     if (Object.keys(this.route).length > 0) {
       let method = req.method.toLocaleLowerCase();
-      // if (method === 'get' && req.pathInfo.endsWith('_jsoc')) {
-      //   let jsocPath = path.resolve('./jsoc.json');
-      //   if (fs.existsSync(jsocPath)) {
-      //     res.json(200, require(jsocPath));
-      //   } else {
-      //     res.json(404, {}, 'jsoc file not found');
-      //   }
-      //   return;
-      // }
       let pathInfo = req.pathInfo;
       let matched = false;
       if (this.route[method]) {
