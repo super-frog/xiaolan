@@ -157,6 +157,7 @@ class Xiaolan {
                       res.raw(rSet[k].httpStatus, {
                         'content-type': 'application/json; charset=UTF-8'
                       }, rSet[k].obj());
+                      return ;
                     }
                   }
                   reactor.reflect(req, res).execute()

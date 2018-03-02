@@ -4,7 +4,7 @@
 "use strict";
 const fs = require('fs');
 const env = require('dotenvr').load();
-
+Object.assign(process.env, env);
 const config = {
   port: env['PORT'] || process.env['PORT'],
   cors: env['CORS'] || process.env['CORS'],

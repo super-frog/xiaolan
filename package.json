@@ -1,6 +1,6 @@
 {
   "name": "xiaolan",
-  "version": "1.6.11",
+  "version": "1.6.18",
   "description": "xiaolan web framework",
   "main": "app.js",
   "scripts": {},
