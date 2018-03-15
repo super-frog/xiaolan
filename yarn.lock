@@ -231,9 +231,9 @@ util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
 
-xiaolan-db@^1.2.9:
-  version "1.2.9"
-  resolved "https://registry.yarnpkg.com/xiaolan-db/-/xiaolan-db-1.2.9.tgz#97d4f17476902dfd7cf35d92c95e51eebf3ca9b9"
+xiaolan-db@^1.2.13:
+  version "1.2.13"
+  resolved "https://registry.npmjs.org/xiaolan-db/-/xiaolan-db-1.2.13.tgz#2986e518b4a07f2094c0f335cc8af8550076e01c"
   dependencies:
     fy-mysql "^0.2.13"
 

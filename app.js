@@ -142,11 +142,13 @@ class Xiaolan {
               });
           }, function (err, ret) {
             if (err) {
+              console.error(err);
               res.raw(error.INTERNAL_ERROR.httpStatus, {
                 'content-type': 'application/json; charset=UTF-8'
               }, error.INTERNAL_ERROR.obj());
             } else {
               if (eSet.length) {
+                console.error(eSet);
                 res.raw(error.INTERNAL_ERROR.httpStatus, {
                   'content-type': 'application/json; charset=UTF-8'
                 }, error.INTERNAL_ERROR.obj());
@@ -171,9 +173,11 @@ class Xiaolan {
                       }
                     })
                     .catch((e) => {
+                      console.error(e);
+                      let message = (e && e.name === 'MysqlError') ? e.sqlMessage : e.message;
                       res.raw(error.INTERNAL_ERROR.httpStatus, {
                         'content-type': 'application/json; charset=UTF-8'
-                      }, error.INTERNAL_ERROR.obj());
+                      }, Object.assign(error.INTERNAL_ERROR.obj(), { message }));
                     });
                 } else {
                   reactor.reflect(req, res).execute()
@@ -187,7 +191,8 @@ class Xiaolan {
                       }
                     })
                     .catch((e) => {
-                      let message = (e && e.name === 'MysqlError') ? e.sqlMessage : '';
+                      console.error(e);
+                      let message = (e && e.name === 'MysqlError') ? e.sqlMessage : e.message;
                       res.raw(error.INTERNAL_ERROR.httpStatus, {
                         'content-type': 'application/json; charset=UTF-8'
                       }, Object.assign(error.INTERNAL_ERROR.obj(), { message }));
