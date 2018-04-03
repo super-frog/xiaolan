@@ -7,7 +7,7 @@ const http = require('http');
 const path = require('path');
 const fs = require('fs');
 const async = require('async');
-const EOL = require('os').EOL;
+const { EOL } = require('os');
 const Route = require('./lib/route');
 const Request = require('./lib/request');
 const Logger = require('./lib/Logger');
@@ -159,7 +159,7 @@ class Xiaolan {
                       res.raw(rSet[k].httpStatus, {
                         'content-type': 'application/json; charset=UTF-8'
                       }, rSet[k].obj());
-                      return ;
+                      return;
                     }
                   }
                   reactor.reflect(req, res).execute()
