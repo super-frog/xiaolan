@@ -1,6 +1,6 @@
 {
   "name": "xiaolan",
-  "version": "1.6.34",
+  "version": "1.6.38",
   "description": "xiaolan web framework",
   "main": "app.js",
   "scripts": {},
@@ -13,8 +13,7 @@
   "dependencies": {
     "async": "^2.5.0",
     "colors": "^1.1.2",
-    "crypto": "0.0.3",
-    "dotenvr": "^0.1.13",
+    "dotenvr": "^0.1.15",
     "easymysql": "^0.2.7",
     "fy-mysql": "^0.2.13",
     "right-pad": "^1.0.1",

@@ -174,10 +174,16 @@ class Xiaolan {
                     })
                     .catch((e) => {
                       console.error(e);
-                      let message = (e && e.name === 'MysqlError') ? e.sqlMessage : e.message;
-                      res.raw(error.INTERNAL_ERROR.httpStatus, {
-                        'content-type': 'application/json; charset=UTF-8'
-                      }, Object.assign(error.INTERNAL_ERROR.obj(), { message }));
+                      if (e instanceof E.XiaolanError) {
+                        res.raw(v.httpStatus, {
+                          'content-type': 'application/json; charset=UTF-8'
+                        }, v.obj());
+                      } else {
+                        let message = (e && e.name === 'MysqlError') ? e.sqlMessage : e.message;
+                        res.raw(error.INTERNAL_ERROR.httpStatus, {
+                          'content-type': 'application/json; charset=UTF-8'
+                        }, Object.assign(error.INTERNAL_ERROR.obj(), { message }));
+                      }
                     });
                 } else {
                   reactor.reflect(req, res).execute()
@@ -192,10 +198,16 @@ class Xiaolan {
                     })
                     .catch((e) => {
                       console.error(e);
-                      let message = (e && e.name === 'MysqlError') ? e.sqlMessage : e.message;
-                      res.raw(error.INTERNAL_ERROR.httpStatus, {
-                        'content-type': 'application/json; charset=UTF-8'
-                      }, Object.assign(error.INTERNAL_ERROR.obj(), { message }));
+                      if (e instanceof E.XiaolanError) {
+                        res.raw(v.httpStatus, {
+                          'content-type': 'application/json; charset=UTF-8'
+                        }, v.obj());
+                      } else {
+                        let message = (e && e.name === 'MysqlError') ? e.sqlMessage : e.message;
+                        res.raw(error.INTERNAL_ERROR.httpStatus, {
+                          'content-type': 'application/json; charset=UTF-8'
+                        }, Object.assign(error.INTERNAL_ERROR.obj(), { message }));
+                      }
                     });
                 }
               }
@@ -224,6 +236,5 @@ class Xiaolan {
     }
   }
 }
-
 
 module.exports = Xiaolan;
