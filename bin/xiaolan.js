@@ -15,7 +15,7 @@ console.log('==============='+process.cwd()+'===============');
 
 const projectRoot = process.cwd()+'/';
 
-fs.exists(projectRoot+'./install.locked', (e) => {
+fs.exists(projectRoot+'./xiaolan.locked', (e) => {
   // 已存在
   if (e) {
     console.log('had been installed');
@@ -23,7 +23,7 @@ fs.exists(projectRoot+'./install.locked', (e) => {
   // 不存在
   else {
     exists(__dirname + '/../tpl', projectRoot, copy);
-    //fs.writeFileSync('./install.locked', 'install');
+    fs.writeFileSync('./xiaolan.locked', 'install');
     console.log('R U OK ?');
   }
 });

@@ -1,8 +1,8 @@
 {
   "name": "xiaolan",
-  "version": "1.3.34",
+  "version": "1.6.38",
   "description": "xiaolan web framework",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {},
   "bin": {
     "xiaolan": "./bin/xiaolan.js"
@@ -11,13 +11,23 @@
   "readmeFilename": "README.md",
   "license": "ISC",
   "dependencies": {
-    "crypto": "0.0.3",
-    "dotenvr": "^0.1.3",
+    "async": "^2.5.0",
+    "colors": "^1.1.2",
+    "dotenvr": "^0.1.15",
     "easymysql": "^0.2.7",
     "fy-mysql": "^0.2.13",
-    "redis": "^2.2.5",
-    "serve-static": "^1.9.3",
-    "swig": "^1.4.2",
-    "yargs": "^4.7.1"
+    "right-pad": "^1.0.1",
+    "xiaolan-db": "^1.2.16",
+    "xiaolan-router": "^1.0.2"
+  },
+  "contributors": [
+    {
+      "name": "jiangyuzhen",
+      "email": "",
+      "url": "https://github.com/jiangyuzhen"
+    }
+  ],
+  "devDependencies": {
+    "mocha": "^5.0.5"
   }
 }

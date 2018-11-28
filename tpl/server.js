@@ -3,10 +3,14 @@
  */
 
 //引入配置文件
-var config = require('./config/config');
+const config = require('./config/config');
 
 //引入小蓝框架
-var xiaolan = require('xiaolan')(config);
+const Xiaolan = require('xiaolan');
+
 
 //启动监听服务
-xiaolan.createServer();
+const app = new Xiaolan(config);
+
+app.createServer();
+
