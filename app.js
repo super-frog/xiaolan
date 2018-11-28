@@ -1,13 +1,6 @@
-/**
- * Created by lanhao on 15/5/17.
- */
-"use strict";
-
 const http = require('http');
-const path = require('path');
 const fs = require('fs');
 const async = require('async');
-const { EOL } = require('os');
 const Route = require('./lib/route');
 const Request = require('./lib/request');
 const Logger = require('./lib/Logger');
@@ -15,9 +8,10 @@ const Response = require('./lib/response');
 const Session = require('./lib/session');
 const E = require('./lib/error');
 
+//全局注册错误
 if (fs.existsSync(process.cwd() + '/definitions/errors/Error.gen.js')) {
-  let errDefine = require(process.cwd() + '/definitions/errors/Error.gen.js');
-  for (let k in errDefine) {
+  const errDefine = require(process.cwd() + '/definitions/errors/Error.gen.js');
+  for (const k in errDefine) {
     E.RegisterError(errDefine[k]);
   }
   global.error = E.ErrorShop;
@@ -35,8 +29,8 @@ if (fs.existsSync(process.cwd() + '/definitions/errors/Error.gen.js')) {
       message: 'Internal Error',
       name: 'INTERNAL_ERROR',
     })
-  }
-};
+  };
+}
 
 global.error.BAD_REQUEST = new E.XiaolanError({
   name: 'BAD_REQUEST',
@@ -65,26 +59,21 @@ class Xiaolan {
 
   register() {
     let map = {};
-    if (fs.existsSync(process.cwd() + '/routes.js')) {
-      map = require(process.cwd() + '/routes');
+    if (fs.existsSync(`${this.basePath}/routes.js`)) {
+      map = require(`${this.basePath}/routes.js`);
     }
-
     Route.register(map);
     return Route.routingTable;
   }
 
   createServer() {
-    let app = this;
+    const app = this;
 
     http.createServer((req, res) => {
-      //todo console make code slow
-      //let _date = new Date();
-      //console.log(`${EOL}${_date.toLocaleString()}${EOL}${req.method}  ${req.url}`);
-
       if (this.config.cors === true) {
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-        res.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
+        res.setHeader('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
       }
 
       req.body = '';
@@ -92,15 +81,11 @@ class Xiaolan {
         req.body += chunk;
       });
       req.on('end', () => {
-
-        let response = new Response(res);
-
-        let request = new Request(req);
+        const response = new Response(res);
+        const request = new Request(req);
         app.sessionStorage.start(request, response);
         app.handler(request, response);
       });
-
-
     }).listen(this.config.port || 3001);
 
     console.log('listen on port:' + (this.config.port || 3001));
@@ -109,24 +94,28 @@ class Xiaolan {
   }
 
   handler(req, res) {
+    const error = global.error;
     if (Object.keys(this.route).length > 0) {
       let method = req.method.toLocaleLowerCase();
       let pathInfo = req.pathInfo;
       let matched = false;
       if (this.route[method]) {
-        for (var k in this.route[method]) {
+        let hitIndex = 0;
+        for (let k = 0; k < this.route[method].length; k++) {
           if (this.route[method][k].reg.test(pathInfo)) {
             matched = true;
+            hitIndex = k;
             break;
           }
         }
+
         if (matched) {
-          req.pickParams(this.route[method][k].patten);
+          req.pickParams(this.route[method][hitIndex].patten);
 
-          let reactor = this.route[method][k].reactor;
+          let reactor = this.route[method][hitIndex].reactor;
           let funcSeries = [];
-          funcSeries = funcSeries.concat(this.route[method][k].middleware);
-
+          funcSeries = funcSeries.concat(this.route[method][hitIndex].middleware);
+          
           let rSet = [];
           let eSet = [];
 
@@ -140,7 +129,7 @@ class Xiaolan {
                 eSet.push(e);
                 callback(e, null);
               });
-          }, function (err, ret) {
+          }, (err, _) => {
             if (err) {
               console.error(err);
               res.raw(error.INTERNAL_ERROR.httpStatus, {
@@ -175,9 +164,9 @@ class Xiaolan {
                     .catch((e) => {
                       console.error(e);
                       if (e instanceof E.XiaolanError) {
-                        res.raw(v.httpStatus, {
+                        res.raw(e.httpStatus, {
                           'content-type': 'application/json; charset=UTF-8'
-                        }, v.obj());
+                        }, e.obj());
                       } else {
                         let message = (e && e.name === 'MysqlError') ? e.sqlMessage : e.message;
                         res.raw(error.INTERNAL_ERROR.httpStatus, {
@@ -199,9 +188,9 @@ class Xiaolan {
                     .catch((e) => {
                       console.error(e);
                       if (e instanceof E.XiaolanError) {
-                        res.raw(v.httpStatus, {
+                        res.raw(e.httpStatus, {
                           'content-type': 'application/json; charset=UTF-8'
-                        }, v.obj());
+                        }, e.obj());
                       } else {
                         let message = (e && e.name === 'MysqlError') ? e.sqlMessage : e.message;
                         res.raw(error.INTERNAL_ERROR.httpStatus, {
@@ -224,15 +213,9 @@ class Xiaolan {
         }, error.NOT_FOUND.obj());
       }
     } else {
-
-      try {
-        require(this.basePath + '/controllers/' + req.params[0])[req.params[1]](req, res);
-      } catch (ex) {
-        console.log(ex);
-        res.raw(error.NOT_FOUND.httpStatus, {
-          'content-type': 'application/json; charset=UTF-8'
-        }, error.NOT_FOUND.obj());
-      }
+      res.raw(error.NOT_FOUND.httpStatus, {
+        'content-type': 'application/json; charset=UTF-8'
+      }, error.NOT_FOUND.obj());
     }
   }
 }

@@ -1,7 +1,4 @@
-/**
- * Created by lanhao on 22/6/17.
- */
-"use strict";
+
 const fs = require('fs');
 const env = require('dotenvr').load();
 Object.assign(process.env, env);

@@ -2,8 +2,8 @@
 
 const Router = require('xiaolan-router');
 
-let router = new Router();
+const router = new Router();
 
-router.get('', 'index');
+router.use('mid').get('', 'index');
 
 module.exports = router;
